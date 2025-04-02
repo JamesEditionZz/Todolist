@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./dashboard.css";
 import Image from "next/image";
 
-function dashboard() {
+function Dashboard() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isClicked, setIsClicked] = useState(false);
   const [data, setData] = useState([]);
@@ -452,4 +452,4 @@ function dashboard() {
   );
 }
 
-export default dashboard;
+export default Dashboard;
