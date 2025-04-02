@@ -1,95 +1,91 @@
+"use client";
+import React, { useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Dashboard from "./Components/Dashboard/page";
+import Data_Table from "./Components/Data_Table/page";
+import KYT from "./Components/KYT/page";
 import Image from "next/image";
-import styles from "./page.module.css";
 
-export default function Home() {
+function page() {
+  const [swiftPage, setSwiftPage] = useState(0);
+  const [headerPage, setHeaderPage] = useState(0);
+
+  const SwitchPage = (value) => {
+    if (value === 1) {
+      setHeaderPage("");
+    }
+    setSwiftPage(value);
+  };
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.js</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+    <div>
+      <div className="tab-horizonbar">
+        <div className="row w-100">
+          <div className="col-1 text-center p-2"><Image src={`/Logo/Logo.png`} width={120} height={35} alt="Logo" /></div>
+          {swiftPage === 0 && (
+            <>
+              <div
+                className={`col-1 text-center cursorheader p-3 ${
+                  headerPage == 0 ? "header-active" : ""
+                }`}
+                onClick={() => setHeaderPage(0)}
+              >
+                Index
+              </div>
+              {/* <div
+                className={`col-1 text-center cursorheader p-3 ${
+                  headerPage == 1 ? "header-active" : ""
+                }`}
+                onClick={() => setHeaderPage(1)}
+              >
+                KYT
+              </div> */}
+            </>
+          )}
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
+      <div className="row w-100">
+        <div className="col-1 tab-verizon">
+          <hr />
+          <div
+            className={`text-center cursorpoint ${
+              swiftPage === 0 ? "active" : ""
+            }`}
+            onClick={() => SwitchPage(0)}
+          >
+            Dashboard
+          </div>
+          <hr />
+          <div
+            className={`text-center cursorpoint ${
+              swiftPage === 1 ? "active" : ""
+            }`}
+            onClick={() => SwitchPage(1)}
+          >
+            To-Do-List
+          </div>
+          <hr />
+        </div>
+        {swiftPage == 0 && headerPage == 0 ? (
+          <div className="page-display col-11">
+            <Dashboard />
+          </div>
+        ) : (
+          swiftPage == 0 &&
+          headerPage == 1 && (
+            <div className="page-display col-11">
+              {/* <KYT /> */}
+            </div>
+          )
+        )}
+        {swiftPage == 1 && (
+          <div className="page-display col-11">
+            <Data_Table />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+
+export default page;

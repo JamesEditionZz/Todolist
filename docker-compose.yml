@@ -1,0 +1,14 @@
+version: "3.9"
+services:
+  app:
+    container_name: ToDoList
+    restart: always
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+        - .:/app
+        - /app/node_modules
+        - /app/.next
+    ports:
+      - "7777:7777"

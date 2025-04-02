@@ -1,0 +1,57 @@
+.bg-image{
+    background-image: '';
+}
+.border-radius{
+    border-radius: 7px;
+}
+
+.box-shadow{
+    box-shadow: 0px 0px 10px black;
+}
+
+.image-resolution{
+    width: 100%;
+    height: 100%;
+}
+.image-brand-resolution{
+    width: 100%;
+    height: 100%;
+}
+
+.image-botton-brand-resolution{
+    width: 100%;
+    height: 80%;
+}
+
+.image-brand-warning{
+    width: 100%;
+    height: 100%;
+}
+
+.border-1{
+    border: 1px solid rgb(201, 201, 201) !important;
+    border-radius: 7px;
+    padding: 10px;
+}
+.opacity-active{
+    animation: opacity 1.5s ease-in-out;
+}
+
+@keyframes opacity {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+.S-menu{
+    margin-top: -50px;
+    border: 1px solid gray;
+    border-radius: 7px;
+    width: 50px;
+    margin-left: 10px;
+    background-color: rgb(194, 194, 194);
+    position: absolute;
+}
