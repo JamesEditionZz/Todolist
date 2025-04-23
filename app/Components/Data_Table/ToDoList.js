@@ -134,9 +134,7 @@ export default function ToDoList() {
                     </td>
                     <td>{item.field_3497864}</td>
                     <td className="text-center">
-                      {selectedValue != "2.Complete"
-                        ? `${selectedValue.split(".")[1]}`
-                        : "สำเร็จ"}
+                      {selectedValue}
                     </td>
                   </tr>
                 ))}
