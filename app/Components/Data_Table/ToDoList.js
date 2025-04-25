@@ -5,7 +5,9 @@ import { useEffect, useState } from "react";
 
 export default function ToDoList() {
   const [data, setData] = useState([]);
-  const [selectedValue, SetSelectedValue] = useState("2.Complete");
+  const seenProjects = [];
+  const arrayProject = [];
+  const arrayMember = [];
 
   //input
   const [teamWork, setTeamWork] = useState("");
@@ -22,7 +24,7 @@ export default function ToDoList() {
           const res = await fetch(nextUrl, {
             method: "GET",
             headers: {
-              Authorization: `Token ${process.env.NEXT_PUBLIC_BASEROW_API_KEY}`,
+              Authorization: `Token 3J24Dj60EDJhajOBwURk3XfKGlwqkI9f`,
             },
           });
 
@@ -51,8 +53,8 @@ export default function ToDoList() {
       setData(sortedData);
     };
 
-    // ตั้ง interval ให้ fetchData ทำงานทุก 3 วินาที
-    const interval = setInterval(fetchData, 3000);
+    // ตั้ง interval ให้ fetchData ทำงานทุก 10 วินาที
+    const interval = setInterval(fetchData, 10000);
 
     // Cleanup function เพื่อล้าง interval เมื่อ component ถูก unmount
     return () => clearInterval(interval);
@@ -75,69 +77,148 @@ export default function ToDoList() {
   const year = datetime.getFullYear();
 
   return (
-    <div className="mx-5 mt-5">
-      <div className="row">
-        <div className="col-2">
-          <div className="box-shadow border-radius">
-            <select
-              className="form-select"
-              onChange={(e) => SetSelectedValue(e.target.value)}
-            >
-              <option value={"2.Complete"}>Complete</option>
-              <option value={"0.NotStart"}>NotStart</option>
-              <option value={"3.Waiting"}>Waiting</option>
-              <option value={"1.Inprogress"}>Inprogress</option>
-              <option value={"4.Cancel"}>Cancel</option>
-            </select>
-          </div>
-        </div>
-      </div>
+    <div className="mx-5 mt-3">
       <div className="box-shadow-table border-radius mt-2">
         <div className="text-center h4 mt-2">
-          {selectedValue != "2.Complete"
-            ? ""
-            : `Report ${day}-${month}-${year}`}
+          {`Report ${day}-${month}-${year}`}
         </div>
         <div className="mt-2">
           <table className="table table-bordered">
             <thead>
               <tr className="text-center">
-                <th>ลำดับที่</th>
-                <th>Team</th>
-                <th>ผู้รับผิดชอบ</th>
-                <th>งานที่ดำเนินการ</th>
-                <th>สถานะ</th>
-                <th></th>
+                <th className="bg-light bg-gradient">Team</th>
+                <th className="bg-light bg-gradient">ผู้รับผิดชอบ</th>
+                <th className="bg-light bg-gradient">Project</th>
+                <th className="bg-light bg-gradient">งานที่ดำเนินการ</th>
+                <th className="bg-light bg-gradient">สถานะ</th>
               </tr>
             </thead>
             <tbody>
-              {data
-                .filter(
-                  (item) =>
-                    item.field_3497869?.value === selectedValue &&
-                    checkDate(item.field_3599645)
-                )
-                .sort((a, b) => {
-                  const valueA = a.field_3497866[0]?.value || "";
-                  const valueB = b.field_3497866[0]?.value || "";
-                  a.field_3497865?.value.localeCompare(b.field_3497865.value);
-                  return valueA.localeCompare(valueB);
-                })
-                .map((item) => (
-                  <tr key={item.id}>
-                    <td className="text-center">{counter++}</td>
-                    <td className="text-center">{item.field_3497865?.value}</td>
-                    <td className="text-center">
-                      {item.field_3497866[0]?.value}{" "}
-                      {item.field_3497866.length > 1 &&
-                        `& ${item.field_3497866[1]?.value}`}
-                    </td>
-                    <td>{item.field_3497864}</td>
-                    <td className="text-center">
-                      {selectedValue}
-                    </td>
-                  </tr>
-                ))}
+              {(() => {
+                const teamCounters = {}; // ตัวนับแยกตามชื่อทีม
+                let currentTeam = null;
+
+                return [...data]
+                  .filter(
+                    (item) =>
+                      item.field_3497869?.value &&
+                      item.field_3599645?.split("T")[0] ===
+                        `${year}-${month}-${day}` &&
+                      (item.field_3497869.value === "2.Complete" ||
+                        item.field_3497869.value === "1.Inprogress")
+                  )
+                  .sort((a, b) => {
+                    const valueA = a.field_3497865?.value || "";
+                    const valueB = b.field_3497865?.value || "";
+                    const compare1 = valueA.localeCompare(valueB);
+                    if (compare1 !== 0) return compare1;
+
+                    const subValueA = a.field_3497866?.[0]?.value || "";
+                    const subValueB = b.field_3497866?.[0]?.value || "";
+                    return subValueA.localeCompare(subValueB);
+                  })
+                  .reduce(
+                    (acc, item) => {
+                      const team = item.field_3497865?.value || "";
+                      const member = item.field_3497866?.[0]?.value || "";
+                      const project = item.field_3497871?.value || "";
+
+                      acc.teamCount[team] = (acc.teamCount[team] || 0) + 1;
+                      acc.memberCount[member] =
+                        (acc.memberCount[member] || 0) + 1;
+                      acc.projectCount[project] =
+                        (acc.projectCount[project] || 0) + 1;
+                      acc.rows.push(item);
+                      return acc;
+                    },
+                    {
+                      teamCount: {},
+                      memberCount: {},
+                      projectCount: {},
+                      rows: [],
+                    }
+                  )
+                  .rows.map((item, index, array) => {
+                    const team = item.field_3497865?.value || "";
+                    const member = item.field_3497866?.[0]?.value || "";
+                    const project = item.field_3497871?.value || "";
+
+                    const showTeam = !array
+                      .slice(0, index)
+                      .some((i) => i.field_3497865?.value === team);
+                    const showMember = !array
+                      .slice(0, index)
+                      .some((i) => i.field_3497866?.[0]?.value === member);
+                    const showProject = !array
+                      .slice(0, index)
+                      .some((i) => i.field_3497871?.value === project);
+
+                    // เริ่มนับใหม่เมื่อเปลี่ยนทีม
+                    if (!teamCounters[team]) {
+                      teamCounters[team] = 1;
+                    } else {
+                      teamCounters[team]++;
+                    }
+
+                    return (
+                      <tr key={item.id}>
+                        {showTeam ? (
+                          <td
+                            rowSpan={
+                              array.filter(
+                                (i) => i.field_3497865?.value === team
+                              ).length
+                            }
+                            className="text-center"
+                          >
+                            {team}
+                          </td>
+                        ) : null}
+
+                        {showMember ? (
+                          <td
+                            rowSpan={
+                              array.filter(
+                                (i) => i.field_3497866?.[0]?.value === member
+                              ).length
+                            }
+                            className="text-center"
+                          >
+                            {member}
+                            {item.field_3497866?.length > 1 &&
+                              ` & ${item.field_3497866[1]?.value}`}
+                          </td>
+                        ) : null}
+
+                        {showProject ? (
+                          <td
+                            rowSpan={
+                              array.filter(
+                                (i) => i.field_3497871?.value === project
+                              ).length
+                            }
+                            className="text-center"
+                          >
+                            {project}
+                          </td>
+                        ) : null}
+
+                        <td>
+                          {teamCounters[team]}. {item.field_3497864}
+                        </td>
+                        <td
+                          className={`text-center ${
+                            item.field_3497869.value === "2.Complete"
+                              ? "bg-success text-white"
+                              : "bg-warning"
+                          }`}
+                        >
+                          {item.field_3497869.value.slice(2)}
+                        </td>
+                      </tr>
+                    );
+                  });
+              })()}
             </tbody>
           </table>
         </div>

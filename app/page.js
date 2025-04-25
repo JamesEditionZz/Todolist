@@ -6,7 +6,7 @@ import Data_Table from "./Components/Data_Table/page";
 import KYT from "./Components/KYT/page";
 import Image from "next/image";
 
-function page() {
+function Page() {
   const [swiftPage, setSwiftPage] = useState(0);
   const [headerPage, setHeaderPage] = useState(0);
 
@@ -88,4 +88,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

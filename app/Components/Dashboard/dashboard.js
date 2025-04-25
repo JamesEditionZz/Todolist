@@ -48,13 +48,9 @@ function Dashboard() {
           const res = await fetch(nextUrl, {
             method: "GET",
             headers: {
-              Authorization: `Token ${process.env.NEXT_PUBLIC_BASEROW_API_KEY}`,
+              Authorization: `Token 3J24Dj60EDJhajOBwURk3XfKGlwqkI9f`,
             },
           });
-
-          if (!res.ok) {
-            throw new Error(`HTTP error! Status: ${res.status}`);
-          }
 
           const response = await res.json();
           allData = [...allData, ...response.results]; // Merge arrays
@@ -87,7 +83,7 @@ function Dashboard() {
         {
           method: "GET",
           headers: {
-            Authorization: `Token ${process.env.NEXT_PUBLIC_BASEROW_API_KEY}`,
+            Authorization: `Token 3J24Dj60EDJhajOBwURk3XfKGlwqkI9f`,
           },
         }
       );
@@ -122,7 +118,7 @@ function Dashboard() {
       {
         method: "PATCH",
         headers: {
-          Authorization: `Token ${process.env.NEXT_PUBLIC_BASEROW_API_KEY}`,
+          Authorization: `Token 3J24Dj60EDJhajOBwURk3XfKGlwqkI9f`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ Status: status }),
@@ -138,7 +134,7 @@ function Dashboard() {
           const res = await fetch(nextUrl, {
             method: "GET",
             headers: {
-              Authorization: `Token ${process.env.NEXT_PUBLIC_BASEROW_API_KEY}`,
+              Authorization: `Token 3J24Dj60EDJhajOBwURk3XfKGlwqkI9f`,
             },
           });
 
